@@ -1,7 +1,7 @@
 ﻿
 namespace Consignment_Store_App
 {
-    partial class Form1
+    partial class ConsignmentStoreUI
     {
         /// <summary>
         /// Required designer variable.
@@ -104,7 +104,7 @@ namespace Consignment_Store_App
             this.makePurchase.Text = "Purchase";
             this.makePurchase.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // ConsignmentStoreUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -118,7 +118,7 @@ namespace Consignment_Store_App
             this.Controls.Add(this.headerText);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "Form1";
+            this.Name = "ConsignmentStoreUI";
             this.Text = "Consignment Store";
             this.ResumeLayout(false);
             this.PerformLayout();
