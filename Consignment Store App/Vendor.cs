@@ -15,7 +15,7 @@ namespace Consignment_Store_App
 
         //Creating a Default Commission rate. We create a constructor (a special method) when a new instance of this class gets created.
         //When a class is created, its constructor is called. A class can have multiple constructors that take different arguments
-        //Constructors enable the developer to set default values
+        //Constructors enable the developer to set default values. If you see no return type, like data type or void, you know it is a Constructor.
         //We know the below Vendor is a constructor because there is no return data type. 
         //Vendor Constructor will run whenever the Vendor class is called upon
         public Vendor()
