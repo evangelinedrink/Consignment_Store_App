@@ -13,15 +13,30 @@ namespace Consignment_Store_App
 {
     public partial class ConsignmentStoreUI : Form
     {
+        //Initiating our Store class, the name of the variable is store. 
         private Store store = new Store();
+
+        //BindingSource is going to place our items data into the Store Items List Box in the Design Tab
+        BindingSource itemsBinding = new BindingSource(); //Initiate our itemsBinding with type BindingSource
+
         //ConsignmentStoreUI() is a Constructor because it has no return type (no void, class, or data type), which means it is called when CosgnmentStoreUI is called
         public ConsignmentStoreUI()
         {
             InitializeComponent();
             SetupData();
+            
+            //Linking our items data to be displayed in the Store Items's itemsListBox that can be seen by the user
+            itemsBinding.DataSource = store.Items; //Linking our items to the itemsBinding (which is a BindingSource). The data source for the itemsBinding (where it gets its data) is from the Items list in the Store
+            //Need to link our itemsListBox to our itemsBinding Source. This will give us our items to display in the itemsListBox in our Consignment Store app
+            itemsListBox.DataSource = itemsBinding; //Linking our Items data to the itemsListBox in our Consignment Store app
+
+            //The code below will display what we would like to see in the Store Item's itemsListbox
+            itemsListBox.DisplayMember = "Display"; //One property that can be displayed. Display is in parenthesis because it is a property in our Item.cs file. We will be getting the Title and Price for each item based on the Display properties information.
+            itemsListBox.ValueMember = "Display";
+
         }
 
-        //SetupData() is a method
+        //SetupData() is a method. This method takes care of filling up the application with data
         private void SetupData()
         {
             //We are adding a new Vendor. There are two ways to add a vendor below. The first way is shown then the second way.
