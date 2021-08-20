@@ -16,8 +16,18 @@ namespace Consignment_Store_App
         //Initiating our Store class, the name of the variable is store. 
         private Store store = new Store();
 
+
         //BindingSource is going to place our items data into the Store Items List Box in the Design Tab
         BindingSource itemsBinding = new BindingSource(); //Initiate our itemsBinding with type BindingSource
+
+        //Creating a List to store items that the user would like to purchase
+        //When the client clicks on "Add to Cart", the items that the user would like to buy will be in a list. This list will be displayed in the shoppingCartListbox
+        //shoppingCartData will contain the list of items that the user would like to purchase
+        //Information about List<T> Class can be found here: https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-5.0 
+        private List<Item> shoppingCartData = new List<Item>();
+
+        //BindingSource makes sure that the items in the shoppingCartData list will be displayed in the shoppingCartListBox
+        BindingSource cartBinding = new BindingSource();
 
         //ConsignmentStoreUI() is a Constructor because it has no return type (no void, class, or data type), which means it is called when CosgnmentStoreUI is called
         public ConsignmentStoreUI()
@@ -31,9 +41,17 @@ namespace Consignment_Store_App
             itemsListBox.DataSource = itemsBinding; //Linking our Items data to the itemsListBox in our Consignment Store app
 
             //The code below will display what we would like to see in the Store Item's itemsListbox
-            itemsListBox.DisplayMember = "Display"; //One property that can be displayed. Display is in parenthesis because it is a property in our Item.cs file. We will be getting the Title and Price for each item based on the Display properties information.
+            itemsListBox.DisplayMember = "Display"; //One property that can be displayed. Display is in parenthesis because it will be displayed as a string on the app. Display is a property in our Item.cs file. We will be getting the Title and Price for each item based on the Display properties information.
             itemsListBox.ValueMember = "Display";
 
+            /*Displaying the items that the user would like to purchase in the shoppingCartListBox*/
+            cartBinding.DataSource = shoppingCartData;  //Our list of items that the user will buy is equal to the cartBinding.DataSource (cartBinding is from the BindingSource)
+            shoppingCartListbox.DataSource = cartBinding; //The listbox for the shopping cart (shoppingCartListbox) will get the data of items to be purchased from the cartBinding (which is a Binding Source type)
+
+            //The Display Member and the Value Member will be shown in the shopping cart list box in the app
+            //One property that can be displayed. Display is in parenthesis because it will be displayed as a string on the app. Display is a property in our Item.cs file. We will be getting the Title and Price for each item based on the Display properties information.
+            shoppingCartListbox.DisplayMember = "Display";
+            shoppingCartListbox.ValueMember = "Display";
         }
 
         //SetupData() is a method. This method takes care of filling up the application with data
@@ -111,6 +129,40 @@ namespace Consignment_Store_App
 
             //The Name of Our Consignment Store
             store.Name = "Knowledge Through Words";
+        }
+
+        //If you want to delete an Event that was placed by you by clicking on the toolbox item in the front-end design of the app (in this case, we created the event  by clicking on the button), make sure to click on the item that you created the event for (in this case the button).
+        //Then click on the Lightning Bolt (which is for Event handlers) and delete the event on the right hand side of the table, then click away from that section. This will delete the Event handler.
+        //If this code is still in the cs file after deleting the event in the Design section of the app, you can now remove/delete this code from the file. There will be no error on the design end of your app.
+        //If you don't follow these steps, your design for the app will not work anymore
+        //This event will work (run) when the user clicks on the Add To Cart --> button
+        private void addToCart_Click(object sender, EventArgs e) //There are two parameters passed in that are required for an event to work: object sender and EventArgs e 
+        {
+            //This button should do are: Figure out what is selected from the items list
+            //Copy that item to the shopping cart
+            //Do we remove the item from the items list? No
+
+            /*In the code below, we have:
+             1) Figured out what is selected from the items list
+            2) Copy selected item(s) to the shopping cart list
+            */
+            //SelectedItem is normally an object, so if we know the type it is, we can state it by typing in what is highlighted in blue/green below (in this case it is Item)
+            //SelectedItem knows what is selected in the ListBox and it will get (read) or set (update) that selected item. SelectedItem is a Microsoft built too.
+            Item selectedItem = (Item)itemsListBox.SelectedItem; //selectedItem is of type Item. SelectedItem is in a selectedItem variable. The Item and (Item) tells us what type it is. The selected item is of type Item (it is formulated by the Item class)
+
+            //ShoppingCartData is our list that contains the items that the user would like to buy.
+            //Whenever a user has selected item(s) to buy, the selected items will be added to the shoppingCartData list
+            //cartBinding.DataSource has been bounded with the shoppingCartData (line 48), so this will be displayed in the shoppingCartListBox
+            shoppingCartData.Add(selectedItem);
+
+            //We need to tell the data binding to refresh that the information has been changed so our selected items can be displayed in the shoppingCartListbox.
+            //If we want to change the entire list (meaning we want the values to be different), the ResetBindings will be True
+            cartBinding.ResetBindings(false); //Whenever we add something to our shopping cart list, we need to have ResetBindings to ensure that the items selected will be shown in the shoppingCartListbox
+
+            //Display selected item in the MessageBox
+            MessageBox.Show(selectedItem.Title);
+            
+            //MessageBox.Show("I have been clicked!");
         }
     }
 }
