@@ -36,7 +36,9 @@ namespace Consignment_Store_App
             SetupData();
             
             //Linking our items data to be displayed in the Store Items's itemsListBox that can be seen by the user
-            itemsBinding.DataSource = store.Items; //Linking our items to the itemsBinding (which is a BindingSource). The data source for the itemsBinding (where it gets its data) is from the Items list in the Store
+            //Where function is a filter. The list conists of every item (every item is given a variable x), where x.Sold is equal to false. This means that the items will be in the Store Item's itemsListbox if the item's Sold property is equal to false. If the item's Sold property is equal to True, than it will not be in Store Item's list.
+            //ToList() means the items are being returned to the Store Item's itemsListBox. This has to be done otherwise the items will not be placed into a list (it will just be floating around)
+            itemsBinding.DataSource = store.Items.Where(x => x.Sold ==false).ToList(); //Linking our items to the itemsBinding (which is a BindingSource). The data source for the itemsBinding (where it gets its data) is from the Items list in the Store
             //Need to link our itemsListBox to our itemsBinding Source. This will give us our items to display in the itemsListBox in our Consignment Store app
             itemsListBox.DataSource = itemsBinding; //Linking our Items data to the itemsListBox in our Consignment Store app
 
@@ -160,9 +162,37 @@ namespace Consignment_Store_App
             cartBinding.ResetBindings(false); //Whenever we add something to our shopping cart list, we need to have ResetBindings to ensure that the items selected will be shown in the shoppingCartListbox
 
             //Display selected item in the MessageBox
-            MessageBox.Show(selectedItem.Title);
+            MessageBox.Show("You have selected the following item(s) to be purchased: "+ selectedItem.Title);
             
             //MessageBox.Show("I have been clicked!");
+        }
+
+        private void makePurchase_Click(object sender, EventArgs e)
+        {
+            //Mark each item in the cart as sold (if we look at the Store.cs class, we see that there is a Sold property)
+            //Clear the Cart (once the item(s) have been purchased, clear the shopping cart list)
+
+            //Each item in the shoppring cart list will be marked as Sold (this is a property in the Store class, found in Store.cs file)
+            foreach(Item item in shoppingCartData)
+            {
+                item.Sold = true;
+            }
+
+            /*Updating the Store Item's List and the Shopping Cart's List when the user clicks on the Purchase button*/
+            //Clearing the shopping cart list
+            shoppingCartData.Clear();
+
+            //We have to let the computer know that we want to update the Store Item's list to contain only the items where its Sold property is equal to false (Item has not been sold yet)
+            //Items that have Sold= true, should not be in the itemsBinding list (Store Item's list)
+            //The code below has to be restated here otherwise the Store Item's list won't remove the items that have been sold from its list. It has to be displayed here because makePurchase_Click is a new method
+            itemsBinding.DataSource = store.Items.Where(x => x.Sold == false).ToList();
+
+            //We need to reset the bindings to make sure that the shopping cart list will refresh and not show the data
+            cartBinding.ResetBindings(false);
+
+            //Whenever we change something in a list, we have to modifiy the binding.
+            //Since the Store Item's list is being updated (it will only display items that have not yet been Sold, Sold property is False), the binding needs to reflect this
+            itemsBinding.ResetBindings(false);
         }
     }
 }
