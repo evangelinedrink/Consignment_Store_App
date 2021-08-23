@@ -29,6 +29,12 @@ namespace Consignment_Store_App
         //BindingSource makes sure that the items in the shoppingCartData list will be displayed in the shoppingCartListBox
         BindingSource cartBinding = new BindingSource();
 
+        //BindingSource to show the vendors in the vendorListbox1
+        BindingSource vendorsBinding = new BindingSource();
+
+        //Creating a variable that will determine the profit that the store will make
+        private decimal storeProfit = 0;
+
         //ConsignmentStoreUI() is a Constructor because it has no return type (no void, class, or data type), which means it is called when CosgnmentStoreUI is called
         public ConsignmentStoreUI()
         {
@@ -54,6 +60,13 @@ namespace Consignment_Store_App
             //One property that can be displayed. Display is in parenthesis because it will be displayed as a string on the app. Display is a property in our Item.cs file. We will be getting the Title and Price for each item based on the Display properties information.
             shoppingCartListbox.DisplayMember = "Display";
             shoppingCartListbox.ValueMember = "Display";
+
+            //Displaying the vendors in the vendors in the vendorListbox1
+            vendorsBinding.DataSource = store.Vendors;
+            vendorListbox1.DataSource = vendorsBinding;
+            //We want to display in the vendorListbox 1 the name of the vendor and how much the store owes each vendor
+            vendorListbox1.DisplayMember = "Display"; //Display is a method in the Vendor.cs file
+            vendorListbox1.ValueMember = "Display";
         }
 
         //SetupData() is a method. This method takes care of filling up the application with data
@@ -176,6 +189,13 @@ namespace Consignment_Store_App
             foreach(Item item in shoppingCartData)
             {
                 item.Sold = true;
+
+                //Whenever an item is sold, the vendor will then get money from the purchase
+                //Multiply the commission (it was originally a double, but we made it into a decimal) times the price of the item (its data type is a decimal)
+                item.Owner.PaymentDue += (decimal)item.Owner.Commission * item.Price;
+
+                //The amount of profit that the store will make (the store gets 50% of the profit from the items sold)
+                storeProfit += (1-(decimal)item.Owner.Commission) * item.Price;
             }
 
             /*Updating the Store Item's List and the Shopping Cart's List when the user clicks on the Purchase button*/
@@ -187,12 +207,19 @@ namespace Consignment_Store_App
             //The code below has to be restated here otherwise the Store Item's list won't remove the items that have been sold from its list. It has to be displayed here because makePurchase_Click is a new method
             itemsBinding.DataSource = store.Items.Where(x => x.Sold == false).ToList();
 
+            //The store's profit will display in the storeProfitValue label in the UI (right next to the label that says "Store Profit: "
+            //The {0:.00} will display up to two decimal places in the dollar amount
+            storeProfitValue.Text= string.Format("${0:.00}", storeProfit); //The information from storeProfit will be displayed in the label
+
             //We need to reset the bindings to make sure that the shopping cart list will refresh and not show the data
             cartBinding.ResetBindings(false);
 
             //Whenever we change something in a list, we have to modifiy the binding.
             //Since the Store Item's list is being updated (it will only display items that have not yet been Sold, Sold property is False), the binding needs to reflect this
             itemsBinding.ResetBindings(false);
+
+            //Need to update the bindings for the vendors. By doing this, the vendors in the vendorsListbox will display the amount of money they will get when their items are sold in the store
+            vendorsBinding.ResetBindings(false);
         }
     }
 }
